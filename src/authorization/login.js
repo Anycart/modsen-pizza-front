@@ -33,11 +33,10 @@ export default function Login() {
         navigate("/");
       } else {
         // Если токен не получен, выводим сообщение об ошибке
-        setErrorMessage("Ошибка входа: Неверные логин или пароль");
+        
       }
     } catch (error) {
-      console.error("Ошибка входа:", error);
-      setErrorMessage("Ошибка входа: " + error.message); // Показываем сообщение об ошибке пользователю
+      setErrorMessage("Uncorrect username or password");
     }
   };
 

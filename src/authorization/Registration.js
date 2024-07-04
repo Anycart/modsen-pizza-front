@@ -1,17 +1,19 @@
 import React, { useState } from 'react';
-import axios from "axios";
-import { Link, useNavigate } from "react-router-dom";
+import axios from 'axios';
+import { Link, useNavigate } from 'react-router-dom';
 
 export default function Registration() {
   let navigate = useNavigate();
 
   const [registration, setRegistration] = useState({
-    username: "",
-    email: "",
-    password: "",
-    fullName: "",
-    sex:""
+    username: '',
+    email: '',
+    password: '',
+    fullName: '',
+    sex: '',
   });
+
+  const [error, setError] = useState('');
 
   const { username, email, password, fullName, sex } = registration;
 
@@ -22,23 +24,28 @@ export default function Registration() {
   const onSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:8080/api/auth/registration", registration);
+      const response = await axios.post('http://localhost:8080/api/auth/registration', registration);
       // Обработка успешной регистрации, например, перенаправление пользователя на страницу входа
-      navigate("/login");
+      navigate('/login');
     } catch (error) {
-      console.error("Ошибка регистрации:", error);
-      // Обработка ошибки регистрации, например, отображение сообщения об ошибке пользователю
+      console.error('Ошибка регистрации:', error);
+      if (error.response && error.response.status === 500) {
+        setError('This username is already in use. Please choose a different username.');
+      } else {
+        setError('An error occurred during registration. Please try again.');
+      }
     }
   };
 
   return (
-    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
-      <form style={{ width: "300px", padding: "20px", border: "1px solid #ccc", borderRadius: "5px" }} onSubmit={onSubmit}>
-        <h2 style={{ textAlign: "center", marginBottom: "20px" }}>Registration</h2>
-        <div style={{ marginBottom: "10px" }}>
+    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+      <form style={{ width: '300px', padding: '20px', border: '1px solid #ccc', borderRadius: '5px' }} onSubmit={onSubmit}>
+        <h2 style={{ textAlign: 'center', marginBottom: '20px' }}>Registration</h2>
+        {error && <p style={{ color: 'red', marginBottom: '10px' }}>{error}</p>}
+        <div style={{ marginBottom: '10px' }}>
           <label htmlFor="fullName">Full Name:</label>
           <input
-            style={{ width: "100%", padding: "5px", borderRadius: "3px", border: "1px solid #ccc" }}
+            style={{ width: '100%', padding: '5px', borderRadius: '3px', border: '1px solid #ccc' }}
             type="text"
             id="fullName"
             name="fullName"
@@ -104,16 +111,22 @@ export default function Registration() {
           </select>
         </div>
         <button
-          style={{ width: "100%", padding: "10px", borderRadius: "3px", border: "none", backgroundColor: "#4CAF50", color: "white" }}
+          style={{
+            width: '100%',
+            padding: '10px',
+            borderRadius: '3px',
+            border: 'none',
+            backgroundColor: '#4CAF50',
+            color: 'white',
+          }}
           type="submit"
         >
           Register
         </button>
-        <p style={{ marginTop: "10px", textAlign: "center" }}>
+        <p style={{ marginTop: '10px', textAlign: 'center' }}>
           Already have an account? <Link to="/login">Login</Link>
         </p>
       </form>
     </div>
   );
-  
 }

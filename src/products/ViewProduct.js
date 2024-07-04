@@ -71,10 +71,10 @@ export default function ViewProduct() {
     
                     {error && <div className="alert alert-danger">{error}</div>}
     
-                    <div className="card">
+                    <div className="card" height={400} width={400}>
                         <div>
                             <ul className="list-group list-group-flush">
-                                <img height={300} width={300} src={product.image} alt="Product" />
+                                <img height={500} src={product.image} alt="Product" />
                                 <li className="list-group-item">
                                     <b>Name:</b> {product.name}
                                 </li>

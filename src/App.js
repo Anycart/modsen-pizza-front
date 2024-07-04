@@ -7,13 +7,10 @@ import AddProduct from './products/AddProduct';
 import EditProduct from './products/EditProduct';
 import ViewProduct from './products/ViewProduct';
 import Login from './authorization/login';
-import UserPage from './account/userPage';
-import Basket from './basket/Basket';
 import Registration from './authorization/Registration';
 import Order from './Order/Order';
 import OrdersPage from './Order/OrdersPage';
 import ViewOrder from './Order/ViewOrder';
-import AddAddress from './Address/AddCategory';
 import AddCategory from './Address/AddCategory';
 
 function App() {
@@ -27,8 +24,6 @@ function App() {
           <Route exact path="/editproduct/:id" element={<EditProduct />} />
           <Route exact path="/viewproduct/:id" element={<ViewProduct />} />
           <Route exact path="/login" element={<Login />} />
-          <Route exact path="/profile" element={<UserPage />} />
-          <Route exact path="/basket" element={<Basket />} />
           <Route exact path="/registration" element={<Registration />} />
           <Route exact path="/createOrder" element={<Order />} />
           <Route exact path="/orders" element={<OrdersPage />} />

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { jwtDecode } from 'jwt-decode';
+import {jwtDecode} from 'jwt-decode';
 import api from '../axiosInstance';
 
 import 'bootstrap/dist/css/bootstrap.min.css'; // Импортируем стили Bootstrap
@@ -30,15 +30,8 @@ export default function Navbar() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const cachedCategories = localStorage.getItem('cachedCategories');
-        if (cachedCategories) {
-          setCategories(JSON.parse(cachedCategories));
-        } else {
-          const response = await api.get("/categories");
-          const fetchedCategories = response.data;
-          setCategories(fetchedCategories);
-          localStorage.setItem('cachedCategories', JSON.stringify(fetchedCategories));
-        }
+        const response = await api.get("/categories");
+        setCategories(response.data);
       } catch (error) {
         console.error('Error fetching categories:', error);
       }
@@ -46,6 +39,15 @@ export default function Navbar() {
 
     fetchCategories(); // Вызываем fetchCategories при монтировании компонента
   }, []); // Зависимость пустая, чтобы вызвать эффект только один раз при монтировании
+
+  const handleDeleteCategory = async (categoryId) => {
+    try {
+      await api.delete(`/categories/${categoryId}`);
+      setCategories(categories.filter(category => category.id !== categoryId));
+    } catch (error) {
+      console.error('Error deleting category:', error);
+    }
+  };
 
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
@@ -92,10 +94,15 @@ export default function Navbar() {
               </button>
               <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
                 {categories.map(category => (
-                  <li key={category.id}>
+                  <li key={category.id} className="d-flex align-items-center justify-content-between">
                     <Link className="dropdown-item" to={`/categories/${category.id}`}>
                       {category.name}
                     </Link>
+                    {decodedToken !== null && decodedToken.roles === 'ADMIN' && (
+                      <button className="btn btn-danger btn-sm ms-2" onClick={() => handleDeleteCategory(category.id)}>
+                        &times;
+                      </button>
+                    )}
                   </li>
                 ))}
               </ul>
@@ -111,7 +118,7 @@ export default function Navbar() {
                   <span className="nav-link">{fullName}</span>
                 </li>
                 <li className="nav-item">
-                  <button type="button" onClick={handleLogout} className="nav-link">
+                  <button type="button" onClick={handleLogout} className="nav-link btn btn-link">
                     Logout
                   </button>
                 </li>
